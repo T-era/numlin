@@ -1,0 +1,47 @@
+<html>
+    <haed>
+        <title>test</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="models.js"></script>
+        <script type="text/javascript" src="views.js"></script>
+        <script type="text/javascript">
+$(function() {
+    var field = new Model.Field();
+    $("#resize").click(function() {
+        field.setSize(3,3);// $("#width").val(), $("#height").val());
+        field.cellAt(1,1).setNumber(0);
+        field.cellAt(1,0).setNumber(3);
+        field.cellAt(0,0).setNumber(2);
+        field.cellAt(0,1).setNumber(2);
+        field.cellAt(2,1).setNumber(3);
+        //field.cellAt(2,0).setNumber(2);
+        field.fire();
+        View.show($("#show"), field);
+    });
+})
+        </script>
+        <style type="text/css">
+div.view {
+    position: relative;
+}
+div.mass {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+}
+div.parts {
+    position: absolute;
+}
+        </style>
+    </head>
+    <body>
+        <div>
+            size:
+            <input id="width">
+            <input id="height">
+            <button id="resize">Set.</button>
+        </div>
+        <div id="show" class="view">
+        </div>
+    </body>
+<html>
