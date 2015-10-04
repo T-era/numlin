@@ -1,61 +1,99 @@
 /// <reference path="cell.ts" />
 /// <reference path="cross.ts" />
+/// <reference path="iwall.ts" />
+
 
 module Model {
+    var FIXED_GRAND_WALL = new DummyWall(WallState.Empty, true);
+    export function doubleList<T>(width :number, height :number, newElm :(x:number, y:number)=>T) :T[][] {
+        var list :T[][] = [[]];
+        list.length = height;
+        for (var y = 0; y < height; y ++) {
+            list[y] = [];
+            list[y].length = width;
+            for (var x = 0; x < width; x ++) {
+                list[y][x] = newElm(x, y);
+            }
+        }
+        return list;
+    }
     export class Field {
         cells :Cell[][] = [[]];
         crosses :Cross[][] = [[]];
-        _width :number;
-        _height :number;
+        horWalls :Wall[][] = [[]];
+        verWalls :Wall[][] = [[]];
+        width :number;
+        height :number;
 
-        setSize(width :number, height :number) :void {
-            var _getWallX = (minX :number, maxX :number, y :number) => {
-                if (this.cellAt(minX, y)) {
-                    return this.cellAt(minX, y).eastWall;
-                } else if (this.cellAt(maxX, y)) {
-                    return this.cellAt(maxX, y).westWall;
-                } else {
-                    return null;
-                }
-            }
-            var _getWallY = (x :number, minY :number, maxY :number) => {
-                if (this.cellAt(x, minY)) {
-                    return this.cellAt(x, minY).southWall;
-                } else if (this.cellAt(x, maxY)) {
-                    return this.cellAt(x, maxY).northWall;
-                } else {
-                    return null;
-                }
-            }
-            this._width = width;
-            this._height = height;
-            this.cells = [[]];
-            this.cells.length = height;
-            for (var y = 0; y < height; y ++) {
-                this.cells[y] = [];
-                this.cells[y].length = width;
-                for (var x = 0; x < width; x ++) {
-                    this.cells[y][x] = new Cell(x, y, this);
-                }
-            }
-
-            this.crosses = [[]];
-            this.crosses.length = height + 1;
-            for (var y = 0; y <= height; y ++) {
-                this.crosses[y] = [];
-                this.crosses[y].length = width + 1;
-                for (var x = 0; x <= width; x ++) {
-                    this.crosses[y][x] = new Cross([
-                        _getWallX(x-1, x, y-1),
-                        _getWallX(x-1, x, y),
-                        _getWallY(x-1, y-1, y),
-                        _getWallY(x, y-1, y)]);
-                }
+        getHorIWall(x :number, y :number) :IWall {
+            var w = this.getHorWall(x, y);
+            if (w) {
+                return w;
+            } else {
+                return FIXED_GRAND_WALL;
             }
         }
+        getVerIWall(x :number, y :number) :IWall {
+            var w = this.getVerWall(x, y);
+            if (w) {
+                return w;
+            } else {
+                return FIXED_GRAND_WALL;
+            }
+        }
+        getHorWall(x :number, y :number) :Wall {
+            if (0 <= x && x < this.horWalls[0].length
+                && 0 <= y && y < this.horWalls.length) {
+                return this.horWalls[y][x];
+            } else {
+                return null;
+            }
+        }
+        getVerWall(x :number, y :number) :Wall {
+            if (0 <= x && x < this.verWalls[0].length
+                && 0 <= y && y < this.verWalls.length) {
+                return this.verWalls[y][x];
+            } else {
+                return null;
+            }
+        }
+        setSize(width :number, height :number) :void {
+            this.verWalls = doubleList(
+                width + 1,
+                height,
+                (x, y) => new Wall(
+                    (x,y) => this.getVerIWall(x, y),
+                    [new Position(x-1, y), new Position(x+1, y)],
+                    x == 0 || x == width));
+
+            this.horWalls = doubleList(
+                width,
+                height + 1,
+                (x, y) => new Wall(
+                    (x,y) => this.getHorIWall(x, y),
+                    [new Position(x, y-1), new Position(x, y+1)],
+                    y == 0 || y == height));
+
+            this.width = width;
+            this.height = height;
+            this.cells = doubleList(
+                width,
+                height,
+                (x, y)=>new Cell(x, y, this));
+
+            this.crosses = doubleList(
+                width + 1,
+                height + 1,
+                (x, y)=> new Cross(
+                        this,
+                        this.getVerWall(x, y-1),
+                        this.getVerWall(x, y),
+                        this.getHorWall(x-1, y),
+                        this.getHorWall(x, y)));
+        }
         cellAt(x :number, y :number) :Cell {
-            if (0 <= x && x < this._width
-                && 0 <= y && y < this._height) {
+            if (0 <= x && x < this.width
+                && 0 <= y && y < this.height) {
                 return this.cells[y][x];
             } else {
                 return null;
@@ -65,8 +103,8 @@ module Model {
             return this.crosses[y][x];
         }
         fire() :void {
-            for (var y = 0; y < this._height; y ++) {
-                for (var x = 0; x < this._width; x ++) {
+            for (var y = 0; y < this.height; y ++) {
+                for (var x = 0; x < this.width; x ++) {
                     var cell = this.cells[y][x];
                     if (cell.num == 0) {
                         cell.setNoWall();

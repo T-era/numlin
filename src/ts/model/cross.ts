@@ -1,32 +1,47 @@
 /// <reference path="wall.ts" />
 /// <reference path="cell.ts" />
+/// <reference path="rabit.ts" />
 
 module Model {
     export class Cross implements WallListener {
-        walls :Wall[];
+        northWall :Wall;
+        southWall :Wall;
+        westWall :Wall;
+        eastWall :Wall;
 
-        constructor(walls :Wall[]) {
-            this.walls = walls;
-            this.walls.forEach(w => {
+        constructor(field :Field
+                , northWall :Wall
+                , southWall :Wall
+                , westWall :Wall
+                , eastWall :Wall) {
+            this.northWall = northWall;
+            this.southWall = southWall;
+            this.eastWall = eastWall;
+            this.westWall = westWall;
+
+            this.forEachWall(w => {
                 if (w) {
                     w.addListener(this);
                 }
-            })
+            });
         }
-        getStates() :WallState[] {
-            return this.walls.map(wall => {
-                if (wall == null) {
-                    return WallState.Empty;
-                } else {
-                    return wall.state;
+        forEachWall(f :(Wall)=>void) :void {
+            [this.northWall, this.southWall, this.westWall, this.eastWall].forEach(f);
+        }
+        _getFiltered(f) :Wall[] {
+            var ret = [];
+            this.forEachWall(w => {
+                if (f(w)) {
+                    ret.push(w);
                 }
-            })
+            });
+            return ret;
         }
         wallDecided(newState :WallState) :void {
-            var countOfWall = this.getStates().filter(state => state == WallState.Wall).length;
-            var unknownList = this.walls.filter(wall => wall && wall.state == WallState.Unknown);
+            var countOfWall = this._getFiltered(w => state(w) == WallState.Wall).length;
+            var unknownList = this._getFiltered(w => state(w) == WallState.Unknown);
             if (countOfWall == 2) {
-                this.walls.filter(wall => wall && wall.state == WallState.Unknown)
+                unknownList
                     .forEach(wall => wall.setState(WallState.Empty));
             } else if (countOfWall == 1) {
                 if (unknownList.length == 1) {
