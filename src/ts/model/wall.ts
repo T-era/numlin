@@ -28,6 +28,9 @@ module Model {
             this.listener.push(l);
         }
         setState(newValue :WallState) :void {
+            if (this.state == newValue) {
+                return;
+            }
             this.state = newValue;
             if (newValue == WallState.Empty
                 && this.edge) {

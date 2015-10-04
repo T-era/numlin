@@ -7,27 +7,16 @@
         <script type="text/javascript">
 $(function() {
     var field = new Model.Field();
-    $("#btn2").click(function() {
-        field.setSize(2,3);// $("#width").val(), $("#height").val());
-        field.cellAt(0,0).setNumber(0);
-        field.cellAt(0,2).setNumber(1);
-        field.fire();
-        View.show($("#show"), field);
-    });
+    var show = new View.View($("#show"));
+
+    init();
+    function init() {
+        field.setSize($("#width").val(), $("#height").val());
+        show.resetField(field);
+        show.show();
+    }
     $("#resize").click(function() {
-        field.setSize(7,4);// $("#width").val(), $("#height").val());
-        field.cellAt(1,1).setNumber(0);
-        field.cellAt(1,0).setNumber(3);
-        field.cellAt(0,0).setNumber(2);
-        field.cellAt(0,1).setNumber(2);
-        field.cellAt(2,1).setNumber(3);
-        field.cellAt(3,1).setNumber(1);
-        field.cellAt(5,0).setNumber(0);
-        field.cellAt(5,3).setNumber(0);
-        field.cellAt(0,3).setNumber(1);
-        //field.cellAt(2,0).setNumber(2);
-        field.fire();
-        View.show($("#show"), field);
+        init();
     });
 })
         </script>
@@ -43,15 +32,18 @@ div.mass {
 div.parts {
     position: absolute;
 }
+div.view input {
+    width: 30px;
+    margin: 3px;
+}
         </style>
     </head>
     <body>
         <div>
             size:
-            <input id="width">
-            <input id="height">
+            <input id="width" value="16">
+            <input id="height" value="16">
             <button id="resize">Set.</button>
-            <button id="btn2">TEST</button>
         </div>
         <div id="show" class="view">
         </div>

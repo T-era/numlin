@@ -52,6 +52,10 @@ this.x = x; this.y = y;
                     this.eastWall)];
         }
 
+        fireEvent() :void {
+            this.wallDecided(null);
+        }
+
         setNumber(arg :number) :void {
             this.num = arg;
             this._rabits.forEach((r)=>r.wallDecided(null));
@@ -74,9 +78,11 @@ this.x = x; this.y = y;
                 } else if (this._countEmpty() == 4 - this.num) {
                     this._setIfUnknown(WallState.Wall);
                 }
-                // TODO 1 で外側にL字Emptyがあれば、Empty確定する
-                // TODO 3 で外側にL字Emptyがあれば、Wall確定する
             }
+            if (this.num == 0) {
+                this.setNoWall();
+            }
+
             // grand連鎖
             function __set(dest) {
                 if (dest.state == WallState.Empty
