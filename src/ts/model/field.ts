@@ -64,7 +64,8 @@ module Model {
                 height,
                 (x, y)=> new Wall(
                     this,
-                    [new Position(x, y-1), new Position(x, y+1)],
+                    [()=> this.getVerIWall(x-1,y), ()=> this.getVerIWall(x+1,y)],
+                    [()=> this.crossAt(x,y), ()=> this.crossAt(x,y+1)],
                     x == 0 || x == width));
 
             this.horWalls = doubleList(
@@ -72,7 +73,8 @@ module Model {
                 height + 1,
                 (x, y)=> new Wall(
                     this,
-                    [new Position(x-1, y), new Position(x+1, y)],
+                    [() => this.getHorIWall(x, y-1), () => this.getHorIWall(x, y+1)],
+                    [()=> this.crossAt(x,y), ()=> this.crossAt(x+1,y)],
                     y == 0 || y == height));
 
             this.width = width;
@@ -86,7 +88,7 @@ module Model {
                 width + 1,
                 height + 1,
                 (x, y)=> new Cross(
-                        this,
+                        this, x, y,
                         this.getVerWall(x, y-1),
                         this.getVerWall(x, y),
                         this.getHorWall(x-1, y),

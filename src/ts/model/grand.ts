@@ -40,6 +40,6 @@ module Model {
         setGrandPair(cell.westWall, cell.eastWall);
         setGrandSquare(cell.northWall, cell.southWall, cell.westWall, cell.eastWall);
         setGrandSquare(cell.westWall, cell.eastWall, cell.northWall, cell.southWall);
-        setGrandSquare(cell.northWall, cell.southWall, cell.westWall, cell.eastWall);
+        setGrandSquare(cell.northWall, cell.southWall, cell.westWall, cell.eastWall);  // 必要
     }
 }

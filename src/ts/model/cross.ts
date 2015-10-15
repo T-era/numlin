@@ -8,12 +8,18 @@ module Model {
         southWall :Wall;
         westWall :Wall;
         eastWall :Wall;
+        x :number
+        y :number
 
         constructor(field :Field
+                , x :number
+                , y :number
                 , northWall :Wall
                 , southWall :Wall
                 , westWall :Wall
                 , eastWall :Wall) {
+            this.x = x;
+            this.y = y;
             this.northWall = northWall;
             this.southWall = southWall;
             this.eastWall = eastWall;

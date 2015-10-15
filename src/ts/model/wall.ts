@@ -1,5 +1,4 @@
 /// <reference path="cell.ts" />
-/// <reference path="pos.ts" />
 
 module Model {
     export interface GetWall {
@@ -19,13 +18,15 @@ module Model {
         edge :boolean;
         grand :boolean = false;
         field :Field;
-        _neighPos :Position[];
+        _getParaWalls :(()=>IWall)[];
+        _getCrosses :(()=>Cross)[];
         wallId :number = -1;
 
-        constructor(field :Field, neighPos :Position[], isEdge :boolean) {
+        constructor(field :Field, getParaWalls :(()=>IWall)[], getCrosses :(()=>Cross)[], isEdge :boolean) {
             this.edge = isEdge;
             this.field = field;
-            this._neighPos = neighPos;
+            this._getParaWalls = getParaWalls;
+            this._getCrosses = getCrosses;
         }
         addListener(l :WallListener) :void {
             this.listeners.push(l);
@@ -58,29 +59,28 @@ module Model {
             });
         }
         wallChain() {
-            this._neighPos.map(
-                p=> this.field.crossAt(p.x(), p.y())
-            ).forEach(
-                cross=> {
-                    cross.wallChain();
-                }
-            );
+            this._getCrosses
+                .map(f=> f())
+                .forEach(
+                    cross=> {
+                        if (cross) {
+                            cross.wallChain();
+                        }
+                    });
         }
         isBetweenSameId() :boolean {
-            var tempCrosses = this._neighPos
-                .map(p=>this.field.crossAt(p.x(), p.y()));
-            return tempCrosses[0].edgeWallId() == tempCrosses[1].edgeWallId();
+            var tempCrosses = this._getCrosses
+                .map(f=> f());
+            return tempCrosses.length == 2
+                && tempCrosses[0]
+                && tempCrosses[1]
+                && tempCrosses[0].edgeWallId() == tempCrosses[1].edgeWallId();
         }
         isBetweenGrand() :boolean {
-            return this
-                .neighbors()
+            return this._getParaWalls
+                .map(f => f())
                 .map(w => w.grand)
                 .reduce((a,b)=> a && b);
-        }
-        neighbors() :IWall[] {
-            return this._neighPos.map(
-                p => this.field.getVerIWall(p.x(), p.y())
-            );
         }
     }
 }
