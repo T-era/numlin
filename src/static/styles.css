@@ -1,0 +1,22 @@
+div.view {
+    position: relative;
+}
+div.mass {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+}
+div.parts {
+    position: absolute;
+}
+div.view input {
+    width: 30px;
+
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}

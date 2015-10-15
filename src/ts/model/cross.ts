@@ -47,8 +47,49 @@ module Model {
                 if (unknownList.length == 1) {
                     unknownList[0].setState(WallState.Wall);
                 }
+                if (newState == WallState.Wall
+                    && countOfWall == 1
+                    && this.edgeWallId() > 1) {
+                    unknownList.forEach(w=> {
+                        if (w.isBetweenSameId()) {
+                            w.setState(WallState.Empty);
+                        }
+                    });
+                    // TODO WallIDでUnknown => Empty
+                }
             } else if (unknownList.length == 1) {
                 unknownList[0].setState(WallState.Empty);
+            }
+
+            if (newState == WallState.Wall) {
+                this.wallChain();
+            }
+        }
+        wallChain() :void {
+            var walls = this._getFiltered(w=>state(w) == WallState.Wall);
+            if (walls.length == 2) {
+                var wall1 = walls[0];
+                var wall2 = walls[1];
+
+                if (wall1.wallId != wall2.wallId) {
+                    if (wall1.wallId < wall2.wallId) {
+                        //alert(wall2.wallId + '->' + wall1.wallId);
+                        wall2.wallId = wall1.wallId;
+                        wall2.wallChain();
+                    } else if (wall2.wallId < wall1.wallId) {
+                        //alert(wall1.wallId + '->' + wall2.wallId);
+                        wall1.wallId = wall2.wallId;
+                        wall1.wallChain();
+                    }
+                }
+            } else if (walls.length > 2) alert("!?" + walls.length);
+        }
+        edgeWallId() :number {
+            var walls = this._getFiltered(w=>state(w) == WallState.Wall);
+            if (walls.length == 1) {
+                return walls[0].wallId;
+            } else {
+                return 0;
             }
         }
     }

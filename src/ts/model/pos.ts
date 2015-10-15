@@ -13,5 +13,8 @@ module Model {
         y() :number {
             return this._y;
         }
+        toString() {
+            return "(" + this._x + ", " + this._y + ")";
+        }
     }
 }

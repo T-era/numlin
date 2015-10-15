@@ -58,20 +58,21 @@ module Model {
             }
         }
         setSize(width :number, height :number) :void {
+            Wall.maxIndex = 0;  // 壁のインデックスを初期化
             this.verWalls = doubleList(
                 width + 1,
                 height,
-                (x, y) => new Wall(
-                    (x,y) => this.getVerIWall(x, y),
-                    [new Position(x-1, y), new Position(x+1, y)],
+                (x, y)=> new Wall(
+                    this,
+                    [new Position(x, y-1), new Position(x, y+1)],
                     x == 0 || x == width));
 
             this.horWalls = doubleList(
                 width,
                 height + 1,
-                (x, y) => new Wall(
-                    (x,y) => this.getHorIWall(x, y),
-                    [new Position(x, y-1), new Position(x, y+1)],
+                (x, y)=> new Wall(
+                    this,
+                    [new Position(x-1, y), new Position(x+1, y)],
                     y == 0 || y == height));
 
             this.width = width;
@@ -79,7 +80,7 @@ module Model {
             this.cells = doubleList(
                 width,
                 height,
-                (x, y)=>new Cell(x, y, this));
+                (x, y)=> new Cell(x, y, this));
 
             this.crosses = doubleList(
                 width + 1,
@@ -100,7 +101,12 @@ module Model {
             }
         }
         crossAt(x :number, y:number) :Cross {
-            return this.crosses[y][x];
+            if (0 <= y && y <= this.height
+                && 0 <= x && x <= this.width) {
+                return this.crosses[y][x];
+            } else {
+                return null;
+            }
         }
         fire() :void {
             for (var y = 0; y < this.height; y ++) {

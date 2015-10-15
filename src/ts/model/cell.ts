@@ -1,5 +1,6 @@
 /// <reference path="wall.ts" />
 /// <reference path="field.ts" />
+/// <reference path="grand.ts" />
 
 module Model {
     export class Cell implements WallListener {
@@ -11,9 +12,7 @@ module Model {
         grand :boolean;
         _rabits :RabitHead[];
 
-x :number; y:number;
         constructor(x :number, y :number, field :Field) {
-this.x = x; this.y = y;
             this.northWall = field.getHorWall(x, y);
             this.southWall = field.getHorWall(x, y + 1);
             this.westWall = field.getVerWall(x, y);
@@ -66,8 +65,7 @@ this.x = x; this.y = y;
                 [this.northWall, this.southWall, this.eastWall, this.westWall].forEach(
                     wall => {
                         if (wall) wall.setState(WallState.Empty);
-                    }
-                )
+                    });
             }
         }
 
@@ -79,49 +77,9 @@ this.x = x; this.y = y;
                     this._setIfUnknown(WallState.Wall);
                 }
             }
-            if (this.num == 0) {
-                this.setNoWall();
-            }
 
-            // grand連鎖
-            function __set(dest) {
-                if (dest.state == WallState.Empty
-                    && ! dest.grand) {
-                    dest.setGrand(true);
-                } else if (dest.state == WallState.Unknown) {
-                    if (dest.isBetweenGrand()) {
-                        dest.grand = true;
-                        dest.setState(WallState.Empty);
-                    }
-                }
-            }
-            function setGrandPair(wall1, wall2) :void {
-                if (wall1.grand) __set(wall2);
-                if (wall2.grand) __set(wall1);
-            }
-            function setGrandSquare(cond1, cond2, dest1, dest2) :void {
-                if (cond1.grand
-                    && cond2.grand) {
-                    __set(dest1);
-                    __set(dest2);
-                }
-            }
-            function setGrandBetween(wall) {
-                if (wall.state == WallState.Unknown
-                    && wall.isBetweenGrand()) {
-                    __set(wall);
-                }
-            }
             if (state == WallState.Empty) {
-                setGrandBetween(this.northWall);
-                setGrandBetween(this.southWall);
-                setGrandBetween(this.eastWall);
-                setGrandBetween(this.westWall);
-                setGrandPair(this.northWall, this.southWall);
-                setGrandPair(this.westWall, this.eastWall);
-                setGrandSquare(this.northWall, this.southWall, this.westWall, this.eastWall);
-                setGrandSquare(this.westWall, this.eastWall, this.northWall, this.southWall);
-                setGrandSquare(this.northWall, this.southWall, this.westWall, this.eastWall);
+                fireGrandChain(this);
             }
         }
 
@@ -133,16 +91,14 @@ this.x = x; this.y = y;
         }
         _setIfUnknown(state :WallState) {
             this._walls(WallState.Unknown).forEach(
-                (wall :Wall) => { return wall.setState(state); }
-            )
+                (wall :Wall) => { return wall.setState(state); });
         }
         _walls(state :WallState) :Wall[] {
             return [this.northWall
                 , this.southWall
                 , this.eastWall
                 , this.westWall].filter(
-                    (wall) => { return wall && wall.state == state; }
-                );
+                    (wall) => { return wall && wall.state == state; });
         }
     }
 }

@@ -13,37 +13,47 @@ $(function() {
     function init() {
         field.setSize($("#width").val(), $("#height").val());
         show.resetField(field);
+function setNumber(x,y) {
+    return function(num) {
+        var cell = field.cellAt(x,y);
+        cell.setNumber(num);
+        cell.fireEvent();
         show.show();
+    }
+}
+setNumber(1,1)(0);
+setNumber(2,1)(1);
+setNumber(3,1)(1);
+setNumber(5,1)(1);
+setNumber(6,1)(1);
+setNumber(7,1)(0);
+setNumber(2,2)(3);
+setNumber(6,2)(3);
+setNumber(1,3)(0);
+setNumber(2,3)(1);
+setNumber(3,3)(1);
+setNumber(5,3)(1);
+setNumber(6,3)(1);
+setNumber(7,3)(0);
     }
     $("#resize").click(function() {
         init();
     });
-})
+    $("repaint").click(function() {
+        show.resetField(field);
+        show.show();
+    })
+});
         </script>
-        <style type="text/css">
-div.view {
-    position: relative;
-}
-div.mass {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-}
-div.parts {
-    position: absolute;
-}
-div.view input {
-    width: 30px;
-    margin: 3px;
-}
-        </style>
+        <link type="text/css" rel="stylesheet" href="styles.css"></link>
     </head>
     <body>
         <div>
             size:
-            <input id="width" value="16">
-            <input id="height" value="16">
+            <input id="width" value="10">
+            <input id="height" value="10">
             <button id="resize">Set.</button>
+            <button id="repaint">Repaint</button>
         </div>
         <div id="show" class="view">
         </div>

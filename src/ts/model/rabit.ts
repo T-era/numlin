@@ -28,7 +28,7 @@ module Model {
             var state1 = state(this._ear1);
             if (state1 == state(this._ear2)) {
                 if (state1 == WallState.Wall) {
-                    this._set(WallState.Empty);  // TODO cell#setGrand...と衝突？
+                    this._set(WallState.Empty);
                 } else if (state1 == WallState.Empty) {
                     if (this._head.num == 1) {
                         this._set(WallState.Empty);

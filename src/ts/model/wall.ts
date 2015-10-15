@@ -12,20 +12,23 @@ module Model {
         wallDecided(state :WallState);
     }
     export class Wall implements IWall {
+        static maxIndex :number = 0;
+
         state :WallState = WallState.Unknown;
-        listener :WallListener[] = [];
+        listeners :WallListener[] = [];
         edge :boolean;
         grand :boolean = false;
-        _getWall :GetWall;
+        field :Field;
         _neighPos :Position[];
+        wallId :number = -1;
 
-        constructor(getWall :GetWall, neighPos :Position[], isEdge :boolean) {
+        constructor(field :Field, neighPos :Position[], isEdge :boolean) {
             this.edge = isEdge;
-            this._getWall = getWall;
+            this.field = field;
             this._neighPos = neighPos;
         }
         addListener(l :WallListener) :void {
-            this.listener.push(l);
+            this.listeners.push(l);
         }
         setState(newValue :WallState) :void {
             if (this.state == newValue) {
@@ -35,6 +38,9 @@ module Model {
             if (newValue == WallState.Empty
                 && this.edge) {
                 this.grand = true;
+            } else if (newValue == WallState.Wall) {
+                this.wallId = ++ Wall.maxIndex;
+                this.wallChain();
             }
             this.fireListenerEvent();
         }
@@ -47,22 +53,33 @@ module Model {
         }
         fireListenerEvent() :void {
             var state = this.state;
-            this.listener.forEach((l) => {
+            this.listeners.forEach((l) => {
                 l.wallDecided(state)
             });
         }
+        wallChain() {
+            this._neighPos.map(
+                p=> this.field.crossAt(p.x(), p.y())
+            ).forEach(
+                cross=> {
+                    cross.wallChain();
+                }
+            );
+        }
+        isBetweenSameId() :boolean {
+            var tempCrosses = this._neighPos
+                .map(p=>this.field.crossAt(p.x(), p.y()));
+            return tempCrosses[0].edgeWallId() == tempCrosses[1].edgeWallId();
+        }
         isBetweenGrand() :boolean {
-            var n = this
-                .neighbors();
-            var g = n
-                .map(w => w.grand);
-            var r = g
+            return this
+                .neighbors()
+                .map(w => w.grand)
                 .reduce((a,b)=> a && b);
-            return r;
         }
         neighbors() :IWall[] {
             return this._neighPos.map(
-                p => this._getWall(p.x(), p.y())
+                p => this.field.getVerIWall(p.x(), p.y())
             );
         }
     }

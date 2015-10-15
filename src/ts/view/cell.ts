@@ -16,36 +16,45 @@ module View {
         constructor(parent :JQuery, view :View, cell :Model.Cell, x :number, y :number) {
             this.parent = parent;
             this.cell = cell;
-            this.div = $("<div>").addClass("mass")
-                .css("top", y * SIZE)
-                .css("left", x * SIZE)
-                .css("border", "1px solid #ddd")
+            this.div = $("<div>")
+                .addClass("mass")
+                .css({
+                    top: y * SIZE,
+                    left: x * SIZE })
                 .appendTo(parent);
             this.input = $("<input>")
                 .appendTo(this.div);
-            this.nWallDiv = $("<div>").addClass("parts")
-                .css("top", y * SIZE)
-                .css("left", x * SIZE + 4)
-                .css("width", SIZE - 10)
-                .css("height", 4)
+            this.nWallDiv = $("<div>")
+                .addClass("parts")
+                .css({
+                    top: y * SIZE,
+                    left: x * SIZE + 4,
+                    width: SIZE - 10,
+                    height: 4 })
                 .appendTo(parent);
-            this.sWallDiv = $("<div>").addClass("parts")
-                .css("top", (y+1) * SIZE - 4)
-                .css("left", x * SIZE + 4)
-                .css("width", SIZE - 10)
-                .css("height", 4)
+            this.sWallDiv = $("<div>")
+                .addClass("parts")
+                .css({
+                    top: (y+1) * SIZE - 4,
+                    left: x * SIZE + 4,
+                    width: SIZE - 10,
+                    height: 4 })
                 .appendTo(parent);
-            this.wWallDiv = $("<div>").addClass("parts")
-                .css("top", y * SIZE + 4)
-                .css("left", x * SIZE)
-                .css("width", 4)
-                .css("height", SIZE - 10)
+            this.wWallDiv = $("<div>")
+                .addClass("parts")
+                .css({
+                    top: y * SIZE + 4,
+                    left: x * SIZE,
+                    width: 4,
+                    height: SIZE - 10 })
                 .appendTo(parent);
-            this.eWallDiv = $("<div>").addClass("parts")
-                .css("top", y * SIZE + 4)
-                .css("left", (x+1) * SIZE - 4)
-                .css("width", 4)
-                .css("height", SIZE - 10)
+            this.eWallDiv = $("<div>")
+                .addClass("parts")
+                .css({
+                    top: y * SIZE + 4,
+                    left: (x+1) * SIZE - 4,
+                    width: 4,
+                    height: SIZE - 10 })
                 .appendTo(parent);
 
             this.input.change(()=>{
@@ -68,7 +77,7 @@ module View {
             if (wall) {
                 var col = "white";
                 if (wall.state == Model.WallState.Wall) {
-                    col = "#ddd";
+                    col = "black";
                 } else if (wall.state == Model.WallState.Empty) {
                     if (wall.grand) {
                         col = "#ccf";
@@ -78,6 +87,9 @@ module View {
                 }
             }
             wallDiv.css("background", col);
+            if (wall.wallId != -1) {
+                wallDiv.text(wall.wallId);
+            }
         }
     }
 }
