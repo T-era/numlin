@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html>
     <haed>
-        <title>test</title>
+        <meta charset="utf-8">
+        <title>Number Line</title>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="models.js"></script>
         <script type="text/javascript" src="views.js"></script>
-        <script type="text/javascript" src="Test3.js"></script>
         <script type="text/javascript">
 $(function() {
     var field = new Model.Field();
@@ -15,7 +16,6 @@ $(function() {
         field.setSize($("#width").val(), $("#height").val());
         show.resetField(field);
         show.show();
-testInit(field, show);
     }
     $("#resize").click(function() {
         init();
@@ -24,10 +24,6 @@ testInit(field, show);
         Model.bury(field);
         show.show();
     })
-$("#repaint").click(function() {
-    show.resetField(field);
-    show.show();
-});
 });
         </script>
         <link type="text/css" rel="stylesheet" href="styles.css"></link>
@@ -35,11 +31,13 @@ $("#repaint").click(function() {
     <body>
         <div>
             size:
-            <input id="width" value="10">
+            <input id="width" value="10">×
             <input id="height" value="10">
             <button id="resize">Set.</button>
-            <button id="dead_end_bury">Bury Dead End.</button>
-            <button id="repaint">Repaint</button>
+        </div>
+        <div class="bordered">
+            <div class="bordered_title">Extra resolver.</div>
+            <button id="dead_end_bury">Bury</button>
         </div>
         <div id="show" class="view">
         </div>

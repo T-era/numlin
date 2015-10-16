@@ -20,3 +20,16 @@ div.view input {
     bottom: 0;
     margin: auto;
 }
+div.bordered {
+    position: relative;
+    border: 1px solid #aaa;
+    margin: 5px 0 0 0;
+    padding: 5px 0 0 0;
+}
+div.bordered div.bordered_title {
+    position: absolute;
+    background: white;
+    top: -5px;
+    left: 5px;
+    font-size: xx-small;
+}

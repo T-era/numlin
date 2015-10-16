@@ -61,7 +61,6 @@ module Model {
                             w.setState(WallState.Empty);
                         }
                     });
-                    // TODO WallIDでUnknown => Empty
                 }
             } else if (unknownList.length == 1) {
                 unknownList[0].setState(WallState.Empty);
