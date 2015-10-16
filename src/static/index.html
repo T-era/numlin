@@ -6,14 +6,12 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="models.js"></script>
         <script type="text/javascript" src="views.js"></script>
-        <script type="text/javascript" src="Test3.js"></script>
         <script type="text/javascript">
 $(function() {
     var field = new Model.Field();
     var show = new View.View($("#show"));
 
     init();
-testInit(field, show);
     function init() {
         field.setSize($("#width").val(), $("#height").val());
         show.resetField(field);

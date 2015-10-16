@@ -1,10 +1,9 @@
 function testInit(field, show) {
     function setNumber(x,y) {
         return function(num) {
-            var cell = field.cellAt(x,y);
-            cell.setNumber(num);
-            cell.fireEvent();
-            show.show();
+            var cellView = show.fieldView.cells[y][x];
+            cellView.input.val(num);
+            cellView.setNumber(num);
         }
     }
     setNumber(5,1)(0);
