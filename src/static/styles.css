@@ -1,10 +1,15 @@
 div.view {
+    margin: 10px;
     position: relative;
 }
 div.mass {
     position: absolute;
     width: 40px;
     height: 40px;
+}
+div.wall {
+    font-size: x-small;
+    color: #88f;
 }
 div.parts {
     position: absolute;

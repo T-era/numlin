@@ -1,30 +1,41 @@
 /// <reference path="../../lib/models.d.ts" />
 /// <reference path="../../lib/jquery.d.ts" />
 /// <reference path="cell.ts" />
+/// <reference path="wall.ts" />
 
 module View {
     var SIZE = 40;
     export class ViewField {
         cells :ViewCell[][];
+        horWalls :ViewWall[][];
+        verWalls :ViewWall[][];
 
         constructor(parent :JQuery, view :View, field :Model.Field) {
-            var temp = [];
-            temp.length = field.height;
-            for (var y = 0; y < field.height; y ++) {
-                temp[y] = [];
-                temp[y].length = field.width;
-                for (var x = 0; x < field.width; x ++) {
-                    temp[y][x] = new ViewCell(parent, view, field.cellAt(x, y), x, y);
-                }
-            }
-            this.cells = temp;
+            this.cells = field.cells.map((line, y)=> {
+                return line.map((cell, x)=> {
+                    return new ViewCell(parent, view, cell, x, y);
+                });
+            });
+            this.verWalls = field.verWalls.map((line, y)=> {
+                return line.map((wall, x)=> {
+                    return createVerticalWall(parent, view, wall, x, y);
+                });
+            });
+            this.horWalls = field.horWalls.map((line, y)=> {
+                return line.map((wall, x)=> {
+                    return createHorizontalWall(parent, view, wall, x, y);
+                });
+            });
         }
         show() :void {
-            this.cells.forEach(line=>{
-                line.forEach(cellView=>{
-                    cellView.showCell();
-                })
-            })
+            [this.verWalls, this.horWalls]
+                .forEach(walls=>{
+                    walls.forEach(line=>{
+                        line.forEach(wallView=>{
+                            wallView.showWall();
+                        });
+                    });
+                });
         }
     }
 }

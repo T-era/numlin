@@ -12,6 +12,11 @@ module View {
             this.parent = parent;
         }
         resetField(field :Model.Field) :void {
+            this.parent.empty();
+            this.parent.css({
+                width: field.width * SIZE + "px",
+                height: field.height * SIZE + "px"
+            })
             this.fieldView = new ViewField(this.parent, this, field);
         }
         show() :void {
