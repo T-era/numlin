@@ -74,7 +74,8 @@ module Model {
             return tempCrosses.length == 2
                 && tempCrosses[0]
                 && tempCrosses[1]
-                && tempCrosses[0].edgeWallId() == tempCrosses[1].edgeWallId();
+                && tempCrosses[0].edgeWallId() == tempCrosses[1].edgeWallId()
+                && tempCrosses[0].edgeWallId() > 0;
         }
         isBetweenGrand() :boolean {
             return this._getParaWalls
