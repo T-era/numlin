@@ -5,7 +5,7 @@
 
 module Model {
     var FIXED_GRAND_WALL = new DummyWall(WallState.Empty, true);
-    export function doubleList<T>(width :number, height :number, newElm :(x:number, y:number)=>T) :T[][] {
+    function doubleList<T>(width :number, height :number, newElm :(x:number, y:number)=>T) :T[][] {
         var list :T[][] = [[]];
         list.length = height;
         for (var y = 0; y < height; y ++) {
