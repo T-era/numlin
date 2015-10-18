@@ -44,12 +44,12 @@ module View {
         }
         putUndoButton() :void {
             this.div.append(
-                $("<butto>")
-                    .text("x")
+                $("<button>")
+                    .addClass("eraser")
                     .css({
                         position: "relative",
                         top: "5px",
-                        left: "25px"})
+                        left: "20px"})
                     .click(()=> {
                             this.view.copyBut(this.x, this.y);
                         }));

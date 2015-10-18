@@ -38,3 +38,12 @@ div.bordered div.bordered_title {
     left: 5px;
     font-size: xx-small;
 }
+.eraser {
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAaElEQVQoU5VQWw7AIAgrJ9n9j7VdxKXLagoaE/zDviiB5gvxBzACmLP7OPYR+CFCFQl7AFxApIQqqmTiaQURlMJZzmbWa70tebI4rnT/x2DZZaVdQQlIliidtRYksYpmFAGP9h6OtUu/EJclDRVRtP4AAAAASUVORK5CYII=");
+}
