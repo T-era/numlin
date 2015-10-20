@@ -40,7 +40,7 @@ module Model {
         }
         _set(newState :WallState) :void {
             function __setImpl(dest :Wall) {
-                if (dest && dest.state != newState) {
+                if (state(dest) != newState) {
                     dest.setState(newState);
                 }
             }
